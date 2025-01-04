@@ -1,8 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Analytics Pro - SaaS Dashboard
 
-## Getting Started
+A modern SaaS dashboard with authentication, email verification, and analytics features.
 
-First, run the development server:
+## 🚀 Features
+
+- **Authentication**
+  - Email & Password Sign In
+  - Password Reset Flow
+  - Secure Token Handling
+  - Email Verification
+
+- **Security**
+  - Protected API Routes
+  - Secure Password Hashing
+  - JWT Token Management
+  - Environment Variable Protection
+
+- **Database**
+  - PostgreSQL with Prisma ORM
+  - Efficient Data Modeling
+  - Type-safe Queries
+
+- **UI/UX**
+  - Modern Dashboard Design
+  - Responsive Layout
+  - Toast Notifications
+  - Loading States
+
+## 🛠️ Built With
+
+- Next.js 14
+- TypeScript
+- Prisma
+- PostgreSQL
+- NextAuth.js
+- Tailwind CSS
+- Shadcn UI
+- Resend (Email)
+
+## 🔧 Installation
+
+1. Clone the repository
 
 ```bash
 npm run dev
