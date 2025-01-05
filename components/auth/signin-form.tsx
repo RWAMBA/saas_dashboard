@@ -27,10 +27,17 @@ export function SignInForm() {
       });
 
       if (response?.error) {
-        authToast.error(
-          "Authentication failed",
-          "Please check your credentials and try again"
-        );
+        if (response.error === "Please verify your email before signing in") {
+          authToast.error(
+            "Email not verified",
+            "Please check your email for the verification link"
+          );
+        } else {
+          authToast.error(
+            "Authentication failed",
+            "Please check your credentials and try again"
+          );
+        }
         return;
       }
 
@@ -98,6 +105,14 @@ export function SignInForm() {
       >
         Continue with Google
       </Button>
+      <div className="text-center text-sm">
+        <Link 
+          href="/resend-verification" 
+          className="text-primary hover:underline"
+        >
+          Didn't receive verification email?
+        </Link>
+      </div>
     </form>
   );
 } 
