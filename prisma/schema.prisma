@@ -80,4 +80,14 @@ model DailyStats {
   totalEvents   Int      @default(0)
   
   @@index([date])
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  status    String
+  plan      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 } 
