@@ -54,7 +54,7 @@ export function SideNav({ user, className }: SideNavProps) {
 
   return (
     <aside className={cn(
-      "flex h-screen w-64 flex-col border-r bg-background",
+      "flex h-full flex-col border-r bg-background",
       className
     )}>
       <div className="flex h-14 items-center border-b px-4">

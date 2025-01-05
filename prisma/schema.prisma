@@ -46,6 +46,7 @@ model User {
   verificationToken     String?
   accounts              Account[]
   sessions             Session[]
+  analyticsEvents AnalyticsEvent[]
 }
 
 model VerificationToken {
@@ -54,4 +55,29 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model AnalyticsEvent {
+  id          String    @id @default(cuid())
+  name        String    // Event name (e.g., "page_view", "signup", "purchase")
+  properties  Json?     // Additional event properties
+  userId      String?   // Optional user association
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  timestamp   DateTime  @default(now())
+  sessionId   String?   // To track user sessions
+  path        String?   // Page path where event occurred
+  
+  @@index([name])
+  @@index([timestamp])
+  @@index([userId])
+}
+
+model DailyStats {
+  id            String    @id @default(cuid())
+  date          DateTime  @unique
+  totalVisits   Int      @default(0)
+  uniqueVisitors Int     @default(0)
+  totalEvents   Int      @default(0)
+  
+  @@index([date])
 } 
