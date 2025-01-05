@@ -43,4 +43,45 @@ export async function sendPasswordResetEmail(
     console.error('Failed to send email:', error);
     throw error;
   }
+}
+
+export async function sendVerificationEmail(
+  email: string,
+  verificationToken: string
+) {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY is not set');
+  }
+
+  const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${verificationToken}`;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Analytics Pro <onboarding@resend.dev>',
+      to: email,
+      subject: 'Verify your email - Analytics Pro',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>Welcome to Analytics Pro!</h2>
+          <p>Please verify your email address by clicking the button below:</p>
+          <a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background-color: #0070f3; color: white; text-decoration: none; border-radius: 5px; margin: 16px 0;">
+            Verify Email
+          </a>
+          <p>If you didn't create an account, you can safely ignore this email.</p>
+          <hr style="margin: 20px 0; border: none; border-top: 1px solid #eaeaea;" />
+          <p style="color: #666; font-size: 14px;">Analytics Pro</p>
+        </div>
+      `,
+    });
+
+    if (error) {
+      console.error('Failed to send verification email:', error);
+      throw new Error(error.message);
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error sending verification email:', error);
+    throw error;
+  }
 } 

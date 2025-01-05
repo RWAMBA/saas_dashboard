@@ -1,15 +1,16 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthToast } from "@/hooks/use-auth-toast";
-import { handleSignOut } from "@/lib/auth/auth-utils";
+import { useRouter } from "next/navigation";
 import type { User } from "@/types";
 
 interface UserMenuProps {
@@ -25,21 +26,14 @@ export function UserMenu({ user }: UserMenuProps) {
     .join("")
     .toUpperCase();
 
-  const onSignOut = async () => {
+  const handleSignOut = async () => {
     try {
-      const success = await handleSignOut();
-      if (success) {
-        // Show toast first
-        authToast.success(
-          "Signed out successfully",
-          "Come back soon!"
-        );
-        // Then redirect after a small delay
-        setTimeout(() => {
-          router.push("/");
-          router.refresh();
-        }, 100);
-      }
+      await signOut({ redirect: false });
+      authToast.success(
+        "Signed out successfully",
+        "Come back soon!"
+      );
+      router.push("/");
     } catch (error) {
       authToast.error(
         "Error signing out",
@@ -56,8 +50,24 @@ export function UserMenu({ user }: UserMenuProps) {
           <AvatarFallback>{initials || "?"}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={onSignOut}>
+      <DropdownMenuContent align="end" className="w-56">
+        <div className="flex items-center justify-start gap-2 p-2">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium">{user.name}</p>
+            <p className="text-xs text-muted-foreground">{user.email}</p>
+          </div>
+        </div>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem 
+          onClick={() => router.push("/settings/profile")}
+          className="cursor-pointer"
+        >
+          Profile Settings
+        </DropdownMenuItem>
+        <DropdownMenuItem 
+          onClick={handleSignOut}
+          className="cursor-pointer"
+        >
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>

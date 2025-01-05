@@ -1,13 +1,12 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { NextAuthOptions, getServerSession } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import { prisma } from "@/lib/db/prisma";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import type { Adapter } from "next-auth/adapters";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as Adapter,
+  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
@@ -40,6 +39,11 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
 
+        // This check prevents unverified users from signing in
+        if (!user.emailVerified) {
+          throw new Error("Please verify your email before signing in");
+        }
+
         const isCorrectPassword = await bcrypt.compare(
           credentials.password,
           user.hashedPassword
@@ -49,22 +53,14 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
 
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          image: user.image,
-        };
+        return user;
       }
     })
   ],
   callbacks: {
     async session({ token, session }) {
-      if (session.user && token) {
+      if (session.user) {
         session.user.id = token.sub!;
-        session.user.name = token.name as string | null;
-        session.user.email = token.email as string | null;
-        session.user.image = token.picture as string | null;
       }
       return session;
     },
@@ -73,6 +69,6 @@ export const authOptions: NextAuthOptions = {
         token.sub = user.id;
       }
       return token;
-    },
+    }
   },
 }; 

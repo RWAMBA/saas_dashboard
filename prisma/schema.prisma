@@ -43,6 +43,7 @@ model User {
   hashedPassword        String?
   passwordResetToken    String?
   passwordResetExpires  DateTime?
+  verificationToken     String?
   accounts              Account[]
   sessions             Session[]
 }
