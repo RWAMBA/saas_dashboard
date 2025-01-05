@@ -10,6 +10,7 @@ import {
   Sliders,
   Check
 } from "lucide-react";
+import { DashboardPreview } from "./dashboard-preview";
 
 const features = [
   {
@@ -110,11 +111,9 @@ export function Features() {
             ))}
           </ul>
         </div>
-        <div className="relative aspect-video rounded-lg bg-muted">
-          {/* Add dashboard preview image or interactive demo here */}
-          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-            Dashboard Preview
-          </div>
+        
+        <div className="relative aspect-video rounded-lg overflow-hidden">
+          <DashboardPreview />
         </div>
       </div>
     </div>
