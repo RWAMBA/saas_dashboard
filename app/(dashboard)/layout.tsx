@@ -18,8 +18,8 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:flex">
+      {/* Desktop Sidebar - Fixed */}
+      <div className="hidden md:flex w-64 shrink-0 fixed inset-y-0">
         <SideNav user={user} />
       </div>
 
@@ -41,16 +41,20 @@ export default async function DashboardLayout({
         </SheetContent>
       </Sheet>
 
-      <div className="flex-1 flex flex-col md:ml-64">
-        <div className="flex-1">
-          <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container flex h-14 max-w-screen-2xl items-center">
-              <div className="ml-8 md:ml-0 mr-4 flex">
-                <h1 className="text-xl font-semibold">Dashboard</h1>
-              </div>
+      {/* Main Content - Scrollable */}
+      <div className="flex-1 flex flex-col w-full md:pl-64">
+        {/* Fixed Header */}
+        <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex h-14 items-center px-4 md:px-6">
+            <div className="ml-8 md:ml-0 mr-4 flex">
+              <h1 className="text-xl font-semibold">Dashboard</h1>
             </div>
           </div>
-          <div className="container max-w-screen-2xl p-6">
+        </div>
+        
+        {/* Scrollable Content Area */}
+        <div className="flex-1">
+          <div className="container p-4 md:p-6 max-w-7xl mx-auto">
             {children}
           </div>
         </div>
