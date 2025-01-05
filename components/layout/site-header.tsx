@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { BarChart2 } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { MainNav } from "@/components/layout/main-nav";
 
 export function SiteHeader() {
   const { data: session } = useSession();
@@ -15,26 +16,9 @@ export function SiteHeader() {
           <BarChart2 className="h-6 w-6" />
           <span className="font-bold inline-block">Analytics Pro</span>
         </Link>
-        <nav className="mx-6 flex items-center space-x-4 lg:space-x-6">
-          <Link
-            href="/features"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-          >
-            Features
-          </Link>
-          <Link
-            href="/pricing"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-          >
-            Pricing
-          </Link>
-          <Link
-            href="/docs"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-          >
-            Documentation
-          </Link>
-        </nav>
+        
+        <MainNav className="mx-6" />
+
         <div className="ml-auto flex items-center space-x-4">
           {session?.user ? (
             <Link 

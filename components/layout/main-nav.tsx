@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-const mainNavItems = [
+export const mainNavItems = [
   {
     title: "Features",
     href: "/features",
