@@ -68,3 +68,20 @@ export const CSV_HEADERS = [
   'session_id',
   'properties'
 ] as const; 
+
+export type CreateCustomerInput = {
+  name: string;
+  email: string;
+  status: 'active' | 'inactive' | 'pending';
+  plan: 'free' | 'starter' | 'pro' | 'enterprise';
+};
+
+export interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  status: 'active' | 'inactive' | 'pending';
+  plan: 'free' | 'starter' | 'pro' | 'enterprise';
+  createdAt: string;
+  updatedAt: string;
+} 

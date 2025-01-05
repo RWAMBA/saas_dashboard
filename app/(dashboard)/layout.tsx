@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default async function DashboardLayout({
   children,
@@ -19,8 +20,10 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen bg-background">
       {/* Desktop Sidebar - Fixed */}
-      <div className="hidden md:flex w-64 shrink-0 fixed inset-y-0">
-        <SideNav user={user} />
+      <div className="hidden md:block w-64 shrink-0">
+        <div className="fixed inset-y-0 w-64">
+          <SideNav user={user} />
+        </div>
       </div>
 
       {/* Mobile Sidebar */}
@@ -36,28 +39,31 @@ export default async function DashboardLayout({
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="p-0 w-72">
+          <DialogHeader>
+            <DialogTitle className="sr-only">Navigation Menu</DialogTitle>
+          </DialogHeader>
           <div className="sr-only">Navigation menu</div>
           <SideNav user={user} className="border-none" />
         </SheetContent>
       </Sheet>
 
-      {/* Main Content - Scrollable */}
-      <div className="flex-1 flex flex-col w-full md:pl-64">
+      {/* Main Content */}
+      <div className="flex-1">
         {/* Fixed Header */}
         <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex h-14 items-center px-4 md:px-6">
-            <div className="ml-8 md:ml-0 mr-4 flex">
+          <div className="flex h-14 items-center px-4">
+            <div className="flex">
               <h1 className="text-xl font-semibold">Dashboard</h1>
             </div>
           </div>
         </div>
         
-        {/* Scrollable Content Area */}
-        <div className="flex-1">
-          <div className="container p-4 md:p-6 max-w-7xl mx-auto">
+        {/* Content Area */}
+        <main className="flex-1">
+          <div className="px-4 py-4 md:px-6 md:py-6">
             {children}
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
