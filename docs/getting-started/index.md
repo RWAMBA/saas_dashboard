@@ -5,7 +5,7 @@ Welcome to Analytics Pro! This guide will help you get up and running quickly wi
 ## Overview
 
 Analytics Pro is a modern SaaS analytics dashboard built with:
-- Next.js 14
+- Next.js 15+
 - TypeScript
 - PostgreSQL
 - Prisma ORM
@@ -21,7 +21,7 @@ Analytics Pro is a modern SaaS analytics dashboard built with:
 
 ## System Requirements
 
-- Node.js 18+
+- Node.js 23+
 - PostgreSQL 14+
 - npm or yarn
 - Git
