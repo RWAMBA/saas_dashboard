@@ -96,4 +96,6 @@ async function exportToImage(element: HTMLElement, filename: string) {
   link.download = `${filename}.png`;
   link.href = canvas.toDataURL('image/png', 1.0);
   link.click();
-} 
+}
+
+export { downloadCSV }; 

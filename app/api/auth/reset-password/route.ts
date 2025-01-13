@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
-import { resetPasswordSchema } from "@/lib/validations/auth";
+// import { resetPasswordSchema } from "@/lib/validations/auth";
 import { hash, compare } from "bcryptjs";
 import { NextResponse } from "next/server";
 

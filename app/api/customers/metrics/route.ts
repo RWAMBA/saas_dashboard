@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    const url = new URL(req.url);
-    const from = url.searchParams.get('from');
-    const to = url.searchParams.get('to');
+    // Comment out or remove the unused variables
+    // const { from, to } = req.query;
 
     // Get total customers
     const totalCustomers = await prisma.customer.count();

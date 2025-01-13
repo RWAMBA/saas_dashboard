@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DateRangeSelector } from "./date-range-selector";
 import { Overview } from "./overview";
@@ -30,11 +30,40 @@ interface Stat {
   trend: TrendType;
 }
 
+interface AnalyticsData {
+  totalVisitors: number;
+  pageViews: number;
+  avgSessionDuration: string;
+  bounceRate: number;
+  visitorChange: string;
+  pageViewChange: string;
+  durationChange: string;
+  bounceRateChange: string;
+  visitorTrend: TrendType;
+  pageViewTrend: TrendType;
+  durationTrend: TrendType;
+  bounceRateTrend: TrendType;
+  dailyStats: Array<{
+    date: string;
+    totalVisits: number;
+    pageViews: number;
+  }>;
+  topPages: Array<{
+    path: string;
+    _count: number;
+  }>;
+  recentEvents: Array<{
+    id: string;
+    name: string;
+    path: string;
+    timestamp: string;
+  }>;
+}
+
 export function AnalyticsDashboard() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("overview");
-  const [filters, setFilters] = useState<ExportFilter>({
+  const [filters] = useState<ExportFilter>({
     eventType: 'all',
     path: undefined,
   });
@@ -43,7 +72,7 @@ export function AnalyticsDashboard() {
     to: new Date(),
   });
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -60,11 +89,11 @@ export function AnalyticsDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dateRange.from, dateRange.to]);
 
   useEffect(() => {
     fetchData();
-  }, [dateRange]);
+  }, [fetchData]);
 
   const handleDateRangeChange = (range: DateRange) => {
     if (range.from && range.to) {

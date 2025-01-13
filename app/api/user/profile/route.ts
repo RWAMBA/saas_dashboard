@@ -6,6 +6,22 @@ import { randomBytes } from "crypto";
 import { sendVerificationEmail } from "@/lib/email";
 import { NextResponse } from "next/server";
 
+interface UpdateProfileData {
+  name?: string;
+  email?: string;
+  image?: string;
+  currentPassword?: string;
+  newPassword?: string;
+}
+
+interface UserUpdateData {
+  name?: string;
+  email?: string;
+  emailVerified?: Date | null;
+  verificationToken?: string;
+  hashedPassword?: string;
+}
+
 export async function PATCH(req: Request) {
   try {
     const user = await getCurrentUser();
@@ -17,8 +33,8 @@ export async function PATCH(req: Request) {
       );
     }
 
-    const body = await req.json();
-    const validatedData = profileSchema.parse(body);
+    const data: UpdateProfileData = await req.json();
+    const validatedData = profileSchema.parse(data);
 
     // If changing password, verify current password
     if (validatedData.newPassword) {
@@ -48,7 +64,7 @@ export async function PATCH(req: Request) {
     }
 
     // Prepare update data
-    const updateData: any = {
+    const updateData: UserUpdateData = {
       name: validatedData.name,
     };
 

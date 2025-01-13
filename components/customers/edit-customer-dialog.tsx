@@ -17,7 +17,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Customer } from "@/types";
+
+type CustomerStatus = "active" | "inactive" | "pending";
+type CustomerPlan = "free" | "starter" | "pro" | "enterprise";
+
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  status: CustomerStatus;
+  plan: CustomerPlan;
+}
 
 interface EditCustomerDialogProps {
   customer: Customer;
@@ -26,13 +36,20 @@ interface EditCustomerDialogProps {
   onSave: (id: string, updatedCustomer: Partial<Customer>) => void;
 }
 
+interface FormData {
+  name: string;
+  email: string;
+  status: CustomerStatus;
+  plan: CustomerPlan;
+}
+
 export function EditCustomerDialog({
   customer,
   open,
   onOpenChange,
   onSave,
 }: EditCustomerDialogProps) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: customer.name,
     email: customer.email,
     status: customer.status,
@@ -68,8 +85,8 @@ export function EditCustomerDialog({
           />
           <Select
             value={formData.status}
-            onValueChange={(value) =>
-              setFormData((prev) => ({ ...prev, status: value as any }))
+            onValueChange={(value: CustomerStatus) =>
+              setFormData((prev) => ({ ...prev, status: value }))
             }
           >
             <SelectTrigger>
@@ -83,8 +100,8 @@ export function EditCustomerDialog({
           </Select>
           <Select
             value={formData.plan}
-            onValueChange={(value) =>
-              setFormData((prev) => ({ ...prev, plan: value as any }))
+            onValueChange={(value: CustomerPlan) =>
+              setFormData((prev) => ({ ...prev, plan: value }))
             }
           >
             <SelectTrigger>

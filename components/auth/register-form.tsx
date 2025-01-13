@@ -11,6 +11,12 @@ import { registerSchema } from "@/lib/validations/auth";
 import { useAuthToast } from "@/hooks/use-auth-toast";
 import type { AuthError as AuthErrorType } from "@/types";
 
+interface RegisterFormData {
+  email: string;
+  password: string;
+  name?: string;
+}
+
 export function RegisterForm() {
   const router = useRouter();
   const authToast = useAuthToast();
@@ -26,7 +32,7 @@ export function RegisterForm() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: RegisterFormData) => {
     try {
       setError(null);
       setLoading(true);

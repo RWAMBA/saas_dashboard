@@ -1,4 +1,5 @@
 import { DefaultSession } from "next-auth";
+import type { DateRange as DayPickerRange } from "react-day-picker";
 
 declare module "next-auth" {
   interface Session {
@@ -42,7 +43,7 @@ export interface ExportOptions {
   filters?: ExportFilter;
 }
 
-export interface DateRange {
+export interface DateRange extends DayPickerRange {
   from: Date;
   to: Date;
 }

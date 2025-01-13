@@ -2,8 +2,13 @@
 
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
+interface OverviewData {
+  date: string;
+  totalVisits: number;
+}
+
 interface OverviewProps {
-  data: any[];
+  data: OverviewData[];
 }
 
 export function Overview({ data }: OverviewProps) {

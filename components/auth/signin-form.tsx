@@ -47,7 +47,8 @@ export function SignInForm() {
       );
       router.push("/dashboard");
       router.refresh();
-    } catch (error) {
+    } catch (err) {
+      console.error('Sign in error:', err);
       authToast.error(
         "Authentication failed",
         "An unexpected error occurred"
@@ -110,7 +111,7 @@ export function SignInForm() {
           href="/resend-verification" 
           className="text-primary hover:underline"
         >
-          Didn't receive verification email?
+          Didn&apos;t receive verification email?
         </Link>
       </div>
     </form>

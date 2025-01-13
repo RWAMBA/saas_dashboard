@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth";
+import { useSession } from "next-auth/react";
 import { authOptions } from "./auth-options";
 import type { User } from "@/types";
 
@@ -10,7 +11,6 @@ export async function getCurrentUser(): Promise<User | null> {
       return null;
     }
 
-    // Ensure we return a consistent user object structure
     const user: User = {
       id: session.user.id || '',
       name: session.user.name || null,
@@ -25,8 +25,8 @@ export async function getCurrentUser(): Promise<User | null> {
   }
 }
 
-// Add a client-side session checker
+// Fixed client-side session checker
 export function useCurrentUser() {
-  const session = useSession();
-  return session.data?.user as User | null;
+  const { data: session } = useSession();
+  return session?.user as User | null;
 } 

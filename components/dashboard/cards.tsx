@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Users, CreditCard, Activity, ArrowUpRight } from "lucide-react";
+import { Users } from "lucide-react";
 
 export function DashboardCards() {
   return (

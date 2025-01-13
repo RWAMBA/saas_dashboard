@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { FilterControls } from "./filter-controls";
 
 export function CustomReportBuilder() {
-  const [metrics, setMetrics] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
   const generateReport = async () => {
