@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { DateRangeSelector } from "./date-range-selector";
 import { 
   Select,
@@ -11,8 +10,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+interface FilterOptions {
+  period?: string;
+  eventType?: string;
+  source?: string;
+  dateRange?: {
+    from: Date;
+    to: Date;
+  };
+}
+
 export function FilterControls({ onFilterChange }: { 
-  onFilterChange: (filters: any) => void 
+  onFilterChange: (filters: FilterOptions) => void 
 }) {
   const [filters, setFilters] = useState({
     period: "7d",

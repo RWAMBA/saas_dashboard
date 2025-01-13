@@ -9,7 +9,7 @@ This document outlines the authentication mechanisms used in the Analytics Pro A
 
 ## Implementing Authentication
 1. **Obtain an API Key**: Register on the platform to receive an API key.
-2. **Include the API Key in Request Headers**:   ```bash
+2. **Include the API Key in Request Headers**:      ```bash
    curl -H "Authorization: Bearer YOUR_API_KEY" https://api.analyticspro.com/data   ```
 
 ## Security Practices

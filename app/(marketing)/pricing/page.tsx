@@ -8,7 +8,7 @@ export default function PricingPage() {
           Simple, transparent pricing
         </h1>
         <p className="text-xl text-muted-foreground">
-          Choose the perfect plan for your needs. Always know what you'll pay.
+          Choose the perfect plan for your needs. Always know what you&apos;ll pay.
         </p>
       </div>
       <PricingPlans />

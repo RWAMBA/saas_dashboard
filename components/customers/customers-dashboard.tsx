@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { CustomerMetrics } from "@/components/customers/customer-metrics";
 import { CustomersTable } from "@/components/customers/customers-table";
 import { CustomerFilters } from "@/components/customers/customer-filters";
@@ -23,14 +23,13 @@ export function CustomersDashboard() {
   const [showForm, setShowForm] = useState(false);
   
   const { 
-    customers, 
     addCustomer, 
     updateCustomer, 
     deleteCustomer,
     refreshCustomers 
   } = useCustomers(filters);
   
-  const { metrics, refreshMetrics } = useCustomerMetrics(dateRange);
+  const { refreshMetrics } = useCustomerMetrics(dateRange);
 
   const handleAddCustomer = async (customerData: CreateCustomerInput) => {
     try {

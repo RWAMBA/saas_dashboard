@@ -8,12 +8,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+interface CustomerFilters {
+  status: string;
+  plan: string;
+}
+
 interface CustomerFiltersProps {
-  filters: {
-    status: string;
-    plan: string;
-  };
-  onFilterChange: (filters: any) => void;
+  filters: CustomerFilters;
+  onFilterChange: (filters: CustomerFilters) => void;
 }
 
 export function CustomerFilters({ filters, onFilterChange }: CustomerFiltersProps) {

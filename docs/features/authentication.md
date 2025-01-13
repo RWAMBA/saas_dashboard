@@ -6,13 +6,13 @@ This document outlines the authentication features provided by the application, 
 ## Registration
 - **Endpoint**: `POST /api/auth/register`
 - **Functionality**: Allows new users to register. It checks for existing users with the same email, hashes the password, and sends a verification email with a token.
-- **Request Body**:  ```json
+- **Request Body**:    ```json
   {
     "name": "John Doe",
     "email": "john@example.com",
     "password": "securePassword123"
   }  ```
-- **Response**:  ```json
+- **Response**:    ```json
   {
     "message": "User created successfully. Please check your email to verify your account.",
     "user": {
@@ -25,11 +25,11 @@ This document outlines the authentication features provided by the application, 
 ## Forgot Password
 - **Endpoint**: `POST /api/auth/forgot-password`
 - **Functionality**: Generates a password reset token and sends it via email if the user exists.
-- **Request Body**:  ```json
+- **Request Body**:    ```json
   {
     "email": "john@example.com"
   }  ```
-- **Response**:  ```json
+- **Response**:    ```json
   {
     "message": "If an account exists, you will receive a reset email"
   }  ```
@@ -37,12 +37,12 @@ This document outlines the authentication features provided by the application, 
 ## Reset Password
 - **Endpoint**: `POST /api/auth/reset-password`
 - **Functionality**: Allows users to reset their password using a valid reset token.
-- **Request Body**:  ```json
+- **Request Body**:    ```json
   {
     "token": "resetTokenHere",
     "password": "newSecurePassword123"
   }  ```
-- **Response**:  ```json
+- **Response**:    ```json
   {
     "message": "Password reset successful"
   }  ```
@@ -51,7 +51,7 @@ This document outlines the authentication features provided by the application, 
 - **Endpoint**: `GET /api/auth/verify`
 - **Functionality**: Verifies user's email using a token provided via email.
 - **Request Parameters**: `token=verificationTokenHere`
-- **Response**:  ```json
+- **Response**:    ```json
   {
     "message": "Email verified successfully",
     "status": "verified"
@@ -60,11 +60,11 @@ This document outlines the authentication features provided by the application, 
 ## Resend Verification Email
 - **Endpoint**: `POST /api/auth/resend-verification`
 - **Functionality**: Resends the verification email if the user's email is not verified.
-- **Request Body**:  ```json
+- **Request Body**:    ```json
   {
     "email": "john@example.com"
   }  ```
-- **Response**:  ```json
+- **Response**:    ```json
   {
     "message": "Verification email sent"
   }  ```

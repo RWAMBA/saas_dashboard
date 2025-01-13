@@ -12,6 +12,11 @@ import { loginSchema } from "@/lib/validations/auth";
 import { useAuthToast } from "@/hooks/use-auth-toast";
 import type { AuthError as AuthErrorType } from "@/types";
 
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
 export function LoginForm() {
   const router = useRouter();
   const authToast = useAuthToast();
@@ -26,7 +31,7 @@ export function LoginForm() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: LoginFormData) => {
     try {
       setError(null);
       setLoading(true);

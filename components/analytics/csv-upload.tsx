@@ -50,6 +50,7 @@ export function CSVUpload({ onUploadSuccess }: CSVUploadProps) {
         "Upload Failed",
         "Failed to import analytics data. Please check your CSV format."
       );
+      console.error(error);
     } finally {
       setLoading(false);
       event.target.value = '';

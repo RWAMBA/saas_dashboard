@@ -48,6 +48,7 @@ export function ExportButton({ dateRange, filters, containerId }: ExportButtonPr
         "Export Failed",
         `Failed to download ${format} report. Please try again.`
       );
+      console.error(error);
     }
   };
 

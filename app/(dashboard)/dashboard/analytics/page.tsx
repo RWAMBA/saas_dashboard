@@ -1,8 +1,9 @@
-import { getAnalyticsSummary } from "@/lib/analytics/queries";
 import { AnalyticsDashboard } from "@/components/analytics/analytics-dashboard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
+
+export const dynamic = 'force-dynamic';
 
 export default async function AnalyticsPage() {
   return (

@@ -34,7 +34,8 @@ export function UserMenu({ user }: UserMenuProps) {
         "Come back soon!"
       );
       router.push("/");
-    } catch (error) {
+    } catch (err) {
+      console.error('Error:', err);
       authToast.error(
         "Error signing out",
         "Please try again"

@@ -89,7 +89,7 @@ export async function GET(req: Request) {
         }
         return acc;
       }, new Map())
-    ).map(([_, stats]) => stats);
+    ).map((stats) => stats);
 
     return NextResponse.json({
       totalVisitors,

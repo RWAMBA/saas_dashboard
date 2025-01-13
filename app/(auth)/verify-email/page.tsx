@@ -84,7 +84,7 @@ export default function VerifyEmailPage() {
       mounted = false;
       controller.abort();
     };
-  }, [token, router, authToast]); // Only run once when token is available
+  }, [token, router, authToast, verified]); // Only run once when token is available
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4">

@@ -1,4 +1,6 @@
-type EventProperties = Record<string, any>;
+interface EventProperties {
+  [key: string]: string | number | boolean | null;
+}
 
 export async function trackEvent(
   name: string,

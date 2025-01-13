@@ -10,15 +10,20 @@ const CustomerUpdateSchema = z.object({
 });
 
 export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+  request: Request
+): Promise<Response> {
   try {
-    const json = await req.json();
+    // Get ID from URL
+    const id = request.url.split('/').pop();
+    if (!id) {
+      return NextResponse.json({ error: 'Customer ID is required' }, { status: 400 });
+    }
+
+    const json = await request.json();
     const body = CustomerUpdateSchema.parse(json);
 
     const customer = await prisma.customer.update({
-      where: { id: params.id },
+      where: { id },
       data: body,
     });
 
@@ -32,15 +37,17 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+  request: Request
+): Promise<Response> {
   try {
-    const id = params.id;
-    
-    // Check if customer exists first
+    // Get ID from URL
+    const id = request.url.split('/').pop();
+    if (!id) {
+      return NextResponse.json({ error: 'Customer ID is required' }, { status: 400 });
+    }
+
     const customer = await prisma.customer.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!customer) {
@@ -51,10 +58,10 @@ export async function DELETE(
     }
 
     await prisma.customer.delete({
-      where: { id }
+      where: { id },
     });
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting customer:', error);
     return NextResponse.json(
@@ -62,4 +69,4 @@ export async function DELETE(
       { status: 500 }
     );
   }
-} 
+}

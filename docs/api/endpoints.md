@@ -43,50 +43,6 @@ This document lists all the available API endpoints for Analytics Pro, their met
       "data": "Real-time data stream..."
     }    ```
 
-### Analytics Summary
-- **Endpoint**: `GET /api/analytics/summary`
-- **Functionality**: Provides a summary of analytics data for a specified period.
-- **Authorization**: Required
-- **Query Parameters**: `from=2023-01-01&to=2023-01-31`
-- **Response**:    ```json
-    {
-      "totalVisitors": 100,
-      "pageViews": 1500,
-      "visitorChange": "+10%",
-      "pageViewChange": "+5%"
-    }    ```
-
-## Customer Endpoints
-
-### Update Customer
-- **Endpoint**: `PATCH /api/customers/{id}`
-- **Functionality**: Updates customer information.
-- **Authorization**: Required
-- **Request Body**:    ```json
-    {
-      "name": "New Name",
-      "email": "newemail@example.com",
-      "status": "active",
-      "plan": "pro"
-    }    ```
-- **Response**:    ```json
-    {
-      "id": "customerId",
-      "name": "New Name",
-      "email": "newemail@example.com",
-      "status": "active",
-      "plan": "pro"
-    }    ```
-
-### Delete Customer
-- **Endpoint**: `DELETE /api/customers/{id}`
-- **Functionality**: Deletes a customer.
-- **Authorization**: Required
-- **Response**:    ```json
-    {
-      "success": true
-    }    ```
-
 ### Customer Metrics
 - **Endpoint**: `GET /api/customers/metrics`
 - **Functionality**: Retrieves metrics related to customers.
@@ -98,8 +54,6 @@ This document lists all the available API endpoints for Analytics Pro, their met
       "churnRate": "5%",
       "growth": "3%"
     }    ```
-
-## User Profile Management
 
 ### Update User Profile
 - **Endpoint**: `PATCH /api/user/profile`

@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { CustomersDashboard } from "@/components/customers/customers-dashboard";
 import { CustomersTableSkeleton } from "@/components/customers/customers-table-skeleton";
 
+export const dynamic = 'force-dynamic';
+
 export default function CustomersPage() {
   return (
     <div className="space-y-6">

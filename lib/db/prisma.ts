@@ -1,11 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 
+// Extend the NodeJS global type
 declare global {
+  // This must be a var - let/const won't work here
+  // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined;
 }
 
-export const prisma = globalThis.prisma || new PrismaClient();
+// Initialize the prisma client
+const prisma = global.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
-  globalThis.prisma = prisma;
-} 
+  global.prisma = prisma;
+}
+
+export { prisma }; 

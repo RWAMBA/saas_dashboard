@@ -7,10 +7,10 @@ export function useAnalytics() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Track page view
+    // Track page view with stringified query params
     trackEvent('page_view', {
       path: pathname,
-      query: Object.fromEntries(searchParams.entries()),
+      query: JSON.stringify(Object.fromEntries(searchParams.entries())), // Convert object to string
     });
   }, [pathname, searchParams]);
 
