@@ -12,18 +12,31 @@ export async function sendPasswordResetEmail(
   email: string,
   resetToken: string
 ) {
-  if (!process.env.RESEND_API_KEY) {
+  if (!resendApiKey) {
     console.error('Missing RESEND_API_KEY');
     throw new Error('RESEND_API_KEY is not set');
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  if (!appUrl) {
-    throw new Error('NEXT_PUBLIC_APP_URL is not configured');
-  }
+  // Get the deployment URL with proper fallbacks
+  let appUrl = process.env.NEXT_PUBLIC_APP_URL;
   
+  if (process.env.VERCEL_ENV === 'preview') {
+    // For preview deployments, use the deployment URL
+    appUrl = `https://${process.env.VERCEL_URL}`;
+  } else if (process.env.VERCEL_ENV === 'production') {
+    // For production, ensure we have a proper URL
+    if (!process.env.NEXT_PUBLIC_APP_URL) {
+      throw new Error('NEXT_PUBLIC_APP_URL must be set in production');
+    }
+  } else {
+    // For local development
+    appUrl = appUrl || 'http://localhost:3000';
+  }
+
   const resetUrl = `${appUrl}/reset-password?token=${resetToken}`;
 
+  console.log('Environment:', process.env.VERCEL_ENV);
+  console.log('Using app URL:', appUrl);
   console.log('Reset URL:', resetUrl);
 
   try {
@@ -67,13 +80,26 @@ export async function sendVerificationEmail(
     return;
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  if (!appUrl) {
-    throw new Error('NEXT_PUBLIC_APP_URL is not configured');
+  // Get the deployment URL with proper fallbacks
+  let appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  
+  if (process.env.VERCEL_ENV === 'preview') {
+    // For preview deployments, use the deployment URL
+    appUrl = `https://${process.env.VERCEL_URL}`;
+  } else if (process.env.VERCEL_ENV === 'production') {
+    // For production, ensure we have a proper URL
+    if (!process.env.NEXT_PUBLIC_APP_URL) {
+      throw new Error('NEXT_PUBLIC_APP_URL must be set in production');
+    }
+  } else {
+    // For local development
+    appUrl = appUrl || 'http://localhost:3000';
   }
   
   const verifyUrl = `${appUrl}/verify-email?token=${verificationToken}`;
 
+  console.log('Environment:', process.env.VERCEL_ENV);
+  console.log('Using app URL:', appUrl);
   console.log('Verification URL:', verifyUrl);
 
   try {
