@@ -39,8 +39,6 @@ export function RegisterForm() {
       setError(null);
       setLoading(true);
       
-      console.log("Submitting registration form:", data);
-      
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -49,17 +47,19 @@ export function RegisterForm() {
         body: JSON.stringify(data),
       });
 
-      // First check if the response is JSON
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("Server error: Invalid response format");
-      }
-
       const result = await response.json();
-      console.log("Registration response:", result);
 
       if (!response.ok) {
-        throw new Error(result.error || result.message || "Registration failed");
+        if (result.error === "Email already in use") {
+          authToast.warning(
+            "Account exists",
+            "An account with this email already exists. Please sign in or reset your password."
+          );
+          router.push("/login");
+          return;
+        }
+        
+        throw new Error(result.error || "Registration failed");
       }
 
       authToast.success(
