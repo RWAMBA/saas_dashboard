@@ -17,74 +17,53 @@ export default function VerifyEmailPage() {
   const token = searchParams.get("token");
 
   useEffect(() => {
-    const controller = new AbortController();
-    let mounted = true;
-
-    async function verifyEmail() {
+    const verifyEmail = async () => {
       try {
         if (!token) {
           throw new Error("Missing verification token");
         }
 
-        if (!verified) {
-          const response = await fetch(
-            `/api/auth/verify?token=${token}`,
-            { 
-              method: "GET",
-              signal: controller.signal 
-            }
-          );
-
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(data.error || "Failed to verify email");
-          }
-
-          if (mounted) {
-            setVerified(true);
-            
-            if (data.status === "already_verified") {
-              authToast.warning(
-                "Already verified",
-                "This email is already verified. Please sign in."
-              );
-            } else {
-              authToast.success(
-                "Email verified",
-                "You can now sign in to your account"
-              );
-            }
-            
-            router.push("/login");
-          }
+        // Add this check to prevent duplicate verification
+        if (verified) {
+          return;
         }
-      } catch (error) {
-        if (error instanceof Error && error.name === 'AbortError') {
-          return; // Ignore abort errors
+
+        const response = await fetch(`/api/auth/verify?token=${token}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to verify email");
+        }
+
+        setVerified(true);
+        
+        if (data.status === "already_verified") {
+          authToast.warning(
+            "Already verified",
+            "This email is already verified. Please sign in."
+          );
+        } else {
+          authToast.success(
+            "Email verified",
+            "You can now sign in to your account"
+          );
         }
         
+        router.push("/login");
+      } catch (error) {
         console.error("Verification error:", error);
-        if (mounted) {
-          const message = error instanceof Error ? error.message : "Verification failed";
-          setError(message);
-          authToast.error(
-            "Verification failed",
-            message
-          );
-          setVerifying(false);
-        }
+        const message = error instanceof Error ? error.message : "Verification failed";
+        setError(message);
+        authToast.error(
+          "Verification failed",
+          message
+        );
+        setVerifying(false);
       }
-    }
+    };
 
     verifyEmail();
-
-    // Cleanup function
-    return () => {
-      mounted = false;
-      controller.abort();
-    };
-  }, [token, router, authToast, verified]); // Only run once when token is available
+  }, [token, router, authToast, verified]);
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4">

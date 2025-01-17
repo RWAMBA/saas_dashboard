@@ -8,6 +8,55 @@ if (!resendApiKey) {
 
 const resend = new Resend(resendApiKey || 'dummy_key');
 
+export async function sendVerificationEmail(
+  email: string,
+  verificationToken: string
+) {
+  if (!resendApiKey) {
+    console.warn('Skipping email send - RESEND_API_KEY not configured');
+    return;
+  }
+
+  if (!process.env.NEXT_PUBLIC_APP_URL) {
+    throw new Error('NEXT_PUBLIC_APP_URL is not set');
+  }
+
+  const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${verificationToken}`;
+
+  console.log('Using URL:', process.env.NEXT_PUBLIC_APP_URL);
+  console.log('Verification URL:', verifyUrl);
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Analytics Pro <onboarding@resend.dev>',
+      to: email,
+      subject: 'Verify your email - Analytics Pro',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>Welcome to Analytics Pro!</h2>
+          <p>Please verify your email address by clicking the button below:</p>
+          <a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background-color: #0070f3; color: white; text-decoration: none; border-radius: 5px; margin: 16px 0;">
+            Verify Email
+          </a>
+          <p>If you didn't create an account, you can safely ignore this email.</p>
+          <hr style="margin: 20px 0; border: none; border-top: 1px solid #eaeaea;" />
+          <p style="color: #666; font-size: 14px;">Analytics Pro</p>
+        </div>
+      `,
+    });
+
+    if (error) {
+      console.error('Failed to send verification email:', error);
+      throw new Error(error.message);
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error sending verification email:', error);
+    throw error;
+  }
+}
+
 export async function sendPasswordResetEmail(
   email: string,
   resetToken: string
@@ -17,26 +66,13 @@ export async function sendPasswordResetEmail(
     throw new Error('RESEND_API_KEY is not set');
   }
 
-  // Get the deployment URL with proper fallbacks
-  let appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  
-  if (process.env.VERCEL_ENV === 'preview') {
-    // For preview deployments, use the deployment URL
-    appUrl = `https://${process.env.VERCEL_URL}`;
-  } else if (process.env.VERCEL_ENV === 'production') {
-    // For production, ensure we have a proper URL
-    if (!process.env.NEXT_PUBLIC_APP_URL) {
-      throw new Error('NEXT_PUBLIC_APP_URL must be set in production');
-    }
-  } else {
-    // For local development
-    appUrl = appUrl || 'http://localhost:3000';
+  if (!process.env.NEXT_PUBLIC_APP_URL) {
+    throw new Error('NEXT_PUBLIC_APP_URL is not set');
   }
 
-  const resetUrl = `${appUrl}/reset-password?token=${resetToken}`;
+  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
 
-  console.log('Environment:', process.env.VERCEL_ENV);
-  console.log('Using app URL:', appUrl);
+  console.log('Using URL:', process.env.NEXT_PUBLIC_APP_URL);
   console.log('Reset URL:', resetUrl);
 
   try {
@@ -67,68 +103,6 @@ export async function sendPasswordResetEmail(
     return data;
   } catch (error) {
     console.error('Failed to send email:', error);
-    throw error;
-  }
-}
-
-export async function sendVerificationEmail(
-  email: string,
-  verificationToken: string
-) {
-  if (!resendApiKey) {
-    console.warn('Skipping email send - RESEND_API_KEY not configured');
-    return;
-  }
-
-  // Get the deployment URL with proper fallbacks
-  let appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  
-  if (process.env.VERCEL_ENV === 'preview') {
-    // For preview deployments, use the deployment URL
-    appUrl = `https://${process.env.VERCEL_URL}`;
-  } else if (process.env.VERCEL_ENV === 'production') {
-    // For production, ensure we have a proper URL
-    if (!process.env.NEXT_PUBLIC_APP_URL) {
-      throw new Error('NEXT_PUBLIC_APP_URL must be set in production');
-    }
-  } else {
-    // For local development
-    appUrl = appUrl || 'http://localhost:3000';
-  }
-  
-  const verifyUrl = `${appUrl}/verify-email?token=${verificationToken}`;
-
-  console.log('Environment:', process.env.VERCEL_ENV);
-  console.log('Using app URL:', appUrl);
-  console.log('Verification URL:', verifyUrl);
-
-  try {
-    const { data, error } = await resend.emails.send({
-      from: 'Analytics Pro <onboarding@resend.dev>',
-      to: email,
-      subject: 'Verify your email - Analytics Pro',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Welcome to Analytics Pro!</h2>
-          <p>Please verify your email address by clicking the button below:</p>
-          <a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background-color: #0070f3; color: white; text-decoration: none; border-radius: 5px; margin: 16px 0;">
-            Verify Email
-          </a>
-          <p>If you didn't create an account, you can safely ignore this email.</p>
-          <hr style="margin: 20px 0; border: none; border-top: 1px solid #eaeaea;" />
-          <p style="color: #666; font-size: 14px;">Analytics Pro</p>
-        </div>
-      `,
-    });
-
-    if (error) {
-      console.error('Failed to send verification email:', error);
-      throw new Error(error.message);
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Error sending verification email:', error);
     throw error;
   }
 } 

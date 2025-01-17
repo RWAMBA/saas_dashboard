@@ -1,7 +1,6 @@
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/db/prisma";
 import { registerSchema } from "@/lib/validations/auth";
-import { ApiError, handleApiError } from "@/lib/api/errors";
 import { sendVerificationEmail } from "@/lib/email";
 import { randomBytes } from "crypto";
 
@@ -15,7 +14,16 @@ export async function POST(req: Request) {
     });
 
     if (existingUser) {
-      throw new ApiError("Email already in use", 400, "email");
+      return new Response(
+        JSON.stringify({ error: "Email already in use" }),
+        {
+          headers: { 
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store"
+          },
+          status: 400,
+        }
+      );
     }
 
     const hashedPassword = await hash(validatedData.password, 12);
@@ -47,11 +55,26 @@ export async function POST(req: Request) {
         },
       }),
       {
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store"
+        },
         status: 200,
       }
     );
   } catch (error) {
-    return handleApiError(error);
+    console.error("Registration error:", error);
+    return new Response(
+      JSON.stringify({
+        error: error instanceof Error ? error.message : "Registration failed",
+      }),
+      {
+        headers: { 
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store"
+        },
+        status: 500,
+      }
+    );
   }
 } 
