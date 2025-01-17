@@ -1,7 +1,6 @@
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/db/prisma";
 import { registerSchema } from "@/lib/validations/auth";
-import { ApiError, handleApiError } from "@/lib/api/errors";
 import { sendVerificationEmail } from "@/lib/email";
 import { randomBytes } from "crypto";
 

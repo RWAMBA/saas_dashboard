@@ -63,7 +63,7 @@ export default function VerifyEmailPage() {
     };
 
     verifyEmail();
-  }, [token, router, authToast]); // Remove 'verified' from dependencies
+  }, [token, router, authToast, verified]);
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
