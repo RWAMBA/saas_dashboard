@@ -17,7 +17,14 @@ export async function sendPasswordResetEmail(
     throw new Error('RESEND_API_KEY is not set');
   }
 
-  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (!appUrl) {
+    throw new Error('NEXT_PUBLIC_APP_URL is not configured');
+  }
+  
+  const resetUrl = `${appUrl}/reset-password?token=${resetToken}`;
+
+  console.log('Reset URL:', resetUrl);
 
   try {
     const { data, error } = await resend.emails.send({
@@ -60,7 +67,14 @@ export async function sendVerificationEmail(
     return;
   }
 
-  const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${verificationToken}`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (!appUrl) {
+    throw new Error('NEXT_PUBLIC_APP_URL is not configured');
+  }
+  
+  const verifyUrl = `${appUrl}/verify-email?token=${verificationToken}`;
+
+  console.log('Verification URL:', verifyUrl);
 
   try {
     const { data, error } = await resend.emails.send({
