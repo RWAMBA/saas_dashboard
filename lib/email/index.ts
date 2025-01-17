@@ -1,6 +1,12 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resendApiKey = process.env.RESEND_API_KEY;
+
+if (!resendApiKey) {
+  console.warn('RESEND_API_KEY is not set in environment variables');
+}
+
+const resend = new Resend(resendApiKey || 'dummy_key');
 
 export async function sendPasswordResetEmail(
   email: string,
@@ -49,8 +55,9 @@ export async function sendVerificationEmail(
   email: string,
   verificationToken: string
 ) {
-  if (!process.env.RESEND_API_KEY) {
-    throw new Error('RESEND_API_KEY is not set');
+  if (!resendApiKey) {
+    console.warn('Skipping email send - RESEND_API_KEY not configured');
+    return;
   }
 
   const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${verificationToken}`;

@@ -12,9 +12,10 @@ import { useAuthToast } from "@/hooks/use-auth-toast";
 import type { AuthError as AuthErrorType } from "@/types";
 
 interface RegisterFormData {
+  name: string;
   email: string;
   password: string;
-  name?: string;
+  confirmPassword: string;
 }
 
 export function RegisterForm() {
@@ -23,12 +24,13 @@ export function RegisterForm() {
   const [error, setError] = useState<AuthErrorType | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const form = useForm({
+  const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -36,6 +38,8 @@ export function RegisterForm() {
     try {
       setError(null);
       setLoading(true);
+      
+      console.log("Submitting registration form:", data);
       
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -45,21 +49,29 @@ export function RegisterForm() {
         body: JSON.stringify(data),
       });
 
+      // First check if the response is JSON
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Server error: Invalid response format");
+      }
+
       const result = await response.json();
+      console.log("Registration response:", result);
 
       if (!response.ok) {
-        throw new Error(result.error || "Something went wrong");
+        throw new Error(result.error || result.message || "Registration failed");
       }
 
       authToast.success(
         "Account created successfully",
-        "Please sign in with your new account"
+        result.message || "Please check your email to verify your account"
       );
       
       router.push("/login");
     } catch (error) {
+      console.error("Registration error:", error);
       setError({
-        message: error instanceof Error ? error.message : "Something went wrong",
+        message: error instanceof Error ? error.message : "Registration failed",
       });
       authToast.error(
         "Registration failed",
@@ -93,6 +105,13 @@ export function RegisterForm() {
         {...form.register("password")}
         disabled={loading}
         error={form.formState.errors.password?.message}
+      />
+      <FormInput
+        type="password"
+        placeholder="Confirm Password"
+        {...form.register("confirmPassword")}
+        disabled={loading}
+        error={form.formState.errors.confirmPassword?.message}
       />
       
       <Button type="submit" className="w-full" disabled={loading}>

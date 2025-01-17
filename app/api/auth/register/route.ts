@@ -21,39 +21,36 @@ export async function POST(req: Request) {
     const hashedPassword = await hash(validatedData.password, 12);
     const verificationToken = randomBytes(32).toString("hex");
     
-    // Log the token being created
-    console.log("Creating user with token:", verificationToken);
-
     const user = await prisma.user.create({
       data: {
         name: validatedData.name,
         email: validatedData.email,
         hashedPassword,
-        verificationToken, // Store raw token
+        verificationToken,
       },
     });
 
-    // Verify token was stored
-    const createdUser = await prisma.user.findUnique({
-      where: { id: user.id },
-      select: {
-        email: true,
-        verificationToken: true
+    try {
+      await sendVerificationEmail(user.email!, verificationToken);
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
+      // Continue with registration even if email fails
+    }
+
+    return new Response(
+      JSON.stringify({
+        message: "User created successfully. Please check your email to verify your account.",
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+      }),
+      {
+        headers: { "Content-Type": "application/json" },
+        status: 200,
       }
-    });
-
-    console.log("Stored user data:", createdUser);
-
-    await sendVerificationEmail(user.email!, verificationToken);
-
-    return new Response(JSON.stringify({
-      message: "User created successfully. Please check your email to verify your account.",
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
-    }));
+    );
   } catch (error) {
     return handleApiError(error);
   }
