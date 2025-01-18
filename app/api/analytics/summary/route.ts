@@ -14,6 +14,25 @@ export async function GET(req: Request) {
     const from = searchParams.get('from') ? new Date(searchParams.get('from')!) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const to = searchParams.get('to') ? new Date(searchParams.get('to')!) : new Date();
 
+    // Get daily stats directly
+    const dailyStats = await prisma.dailyStats.findMany({
+      where: {
+        date: {
+          gte: from,
+          lte: to,
+        },
+      },
+      orderBy: {
+        date: 'asc',
+      },
+    });
+
+    // Format daily stats for the chart
+    const formattedDailyStats = dailyStats.map(stat => ({
+      date: stat.date.toISOString().split('T')[0],
+      totalVisits: stat.totalVisits,
+    }));
+
     // Get previous period for comparison
     const periodLength = to.getTime() - from.getTime();
     const previousFrom = new Date(from.getTime() - periodLength);
@@ -76,21 +95,6 @@ export async function GET(req: Request) {
       .sort((a, b) => b._count - a._count)
       .slice(0, 5);
 
-    // Calculate daily stats with type safety
-    const dailyStats = Array.from(
-      currentEvents.reduce((acc: Map<string, { date: string; totalVisits: number }>, event) => {
-        const date = event.timestamp.toISOString().split('T')[0];
-        if (!acc.has(date)) {
-          acc.set(date, { date, totalVisits: 0 });
-        }
-        const stats = acc.get(date);
-        if (stats) {
-          stats.totalVisits++;
-        }
-        return acc;
-      }, new Map())
-    ).map((stats) => stats);
-
     return NextResponse.json({
       totalVisitors,
       pageViews,
@@ -104,7 +108,7 @@ export async function GET(req: Request) {
       pageViewTrend: pageViews > previousPageViews ? "up" : pageViews < previousPageViews ? "down" : "neutral",
       durationTrend: "neutral",
       bounceRateTrend: "neutral",
-      dailyStats,
+      dailyStats: formattedDailyStats,
       topPages,
       recentEvents: currentEvents
         .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())

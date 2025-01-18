@@ -39,6 +39,7 @@ model User {
   name                  String?
   email                 String?   @unique
   emailVerified         DateTime?
+  verificationDeadline  DateTime?
   image                 String?
   hashedPassword        String?
   passwordResetToken    String?
@@ -47,6 +48,9 @@ model User {
   accounts              Account[]
   sessions             Session[]
   analyticsEvents AnalyticsEvent[]
+  privacySettings PrivacySettings?
+  auditLogs AuditLog[]
+  role                  String    @default("viewer")
 }
 
 model VerificationToken {
@@ -90,4 +94,30 @@ model Customer {
   plan      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PrivacySettings {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  anonymizeIPs  Boolean  @default(true)
+  cookieConsent Boolean  @default(true)
+  dataRetention Int      @default(90)
+  collectPII    Boolean  @default(false)
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  timestamp DateTime @default(now())
+  action    String
+  details   String?
+  userId    String?
+  ipAddress String?
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([timestamp])
 } 

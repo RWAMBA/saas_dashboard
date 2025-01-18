@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { BarChart2 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { MainNav } from "@/components/layout/main-nav";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export function SiteHeader() {
   const { data: session } = useSession();
@@ -20,6 +21,7 @@ export function SiteHeader() {
         <MainNav className="mx-6" />
 
         <div className="ml-auto flex items-center space-x-4">
+          <ThemeToggle />
           {session?.user ? (
             <Link 
               href="/dashboard"

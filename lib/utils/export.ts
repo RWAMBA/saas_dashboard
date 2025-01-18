@@ -1,22 +1,19 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { downloadCSV } from './download';
-import type { ExportFormat } from '@/types';
+import { ExportFormat } from '@/types';
 
 export async function exportAnalytics(format: ExportFormat, elementId: string, filename: string) {
-  const element = document.getElementById(elementId);
-  if (!element) throw new Error('Element not found');
-
   try {
     switch (format) {
       case 'pdf':
-        await exportToPDF(element, filename);
+        await exportToPDF(elementId, filename);
         break;
       case 'image':
-        await exportToImage(element, filename);
+        await exportToImage(elementId, filename);
         break;
       case 'csv':
-        // existing CSV logic
+        await exportToCSV(elementId, filename);
         break;
       default:
         throw new Error('Unsupported format');
@@ -27,74 +24,105 @@ export async function exportAnalytics(format: ExportFormat, elementId: string, f
   }
 }
 
-async function exportToPDF(element: HTMLElement, filename: string) {
+async function exportToPDF(elementId: string, filename: string) {
+  const element = document.getElementById(elementId);
+  if (!element) throw new Error('Element not found for PDF export');
+
   const canvas = await html2canvas(element, {
-    scale: 2, // Higher quality
+    scale: 2,
     useCORS: true,
     logging: false,
     backgroundColor: '#ffffff',
-    onclone: (document: Document) => {
-      const clonedElement = document.getElementById(element.id) as HTMLElement;
+    onclone: (doc: Document) => {
+      const clonedElement = doc.getElementById(elementId);
       if (clonedElement) {
-        // Apply styles for better visual output
         clonedElement.style.padding = '32px';
         clonedElement.style.background = '#ffffff';
-        clonedElement.style.borderRadius = '0';
-        clonedElement.style.width = '100%';
-        
-        // Ensure charts and graphs are properly sized
-        const charts = clonedElement.querySelectorAll('[data-export-chart]');
-        charts.forEach((chart: Element) => {
-          (chart as HTMLElement).style.height = '400px';
-          (chart as HTMLElement).style.width = '100%';
-        });
       }
     }
   });
   
-  const imgData = canvas.toDataURL('image/png', 1.0);
-  const pdfWidth = canvas.width * 0.75;
-  const pdfHeight = canvas.height * 0.75;
-  
+  const imgData = canvas.toDataURL('image/png');
   const pdf = new jsPDF({
-    orientation: pdfWidth > pdfHeight ? 'landscape' : 'portrait',
+    orientation: 'landscape',
     unit: 'px',
-    format: [pdfWidth, pdfHeight],
-    hotfixes: ['px_scaling']
+    format: [canvas.width, canvas.height]
   });
   
-  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+  pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
   pdf.save(`${filename}.pdf`);
 }
 
-async function exportToImage(element: HTMLElement, filename: string) {
+async function exportToImage(elementId: string, filename: string) {
+  const element = document.getElementById(elementId);
+  if (!element) throw new Error('Element not found for image export');
+
   const canvas = await html2canvas(element, {
-    scale: 2, // Higher quality
+    scale: 2,
     useCORS: true,
-    logging: false,
-    backgroundColor: '#ffffff',
-    onclone: (document: Document) => {
-      const clonedElement = document.getElementById(element.id) as HTMLElement;
-      if (clonedElement) {
-        // Apply styles for better visual output
-        clonedElement.style.padding = '32px';
-        clonedElement.style.background = '#ffffff';
-        clonedElement.style.borderRadius = '0';
-        clonedElement.style.width = '100%';
-        
-        // Ensure charts and graphs are properly sized
-        const charts = clonedElement.querySelectorAll('[data-export-chart]');
-        charts.forEach((chart: Element) => {
-          (chart as HTMLElement).style.height = '400px';
-          (chart as HTMLElement).style.width = '100%';
-        });
-      }
-    }
+    backgroundColor: '#ffffff'
   });
 
   const link = document.createElement('a');
   link.download = `${filename}.png`;
-  link.href = canvas.toDataURL('image/png', 1.0);
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+async function exportToCSV(elementId: string, filename: string) {
+  const element = document.getElementById(elementId);
+  if (!element) throw new Error('Element not found for CSV export');
+
+  // Get all metrics from the dashboard
+  const metrics = {
+    totalVisitors: element.querySelector('[data-metric="totalvisitors"]')?.textContent,
+    pageViews: element.querySelector('[data-metric="pageviews"]')?.textContent,
+    avgDuration: element.querySelector('[data-metric="avgsessionduration"]')?.textContent,
+    bounceRate: element.querySelector('[data-metric="bouncerate"]')?.textContent,
+  };
+
+  // Get chart data
+  const chartData = element.querySelectorAll('[data-chart-point]');
+  const dailyData = Array.from(chartData).map(point => ({
+    date: point.getAttribute('data-date'),
+    visits: point.getAttribute('data-visits'),
+  }));
+
+  // Create CSV content with sections
+  const csvRows = [
+    // Header
+    ['Analytics Export'],
+    ['Generated at', new Date().toLocaleString()],
+    [''],  // Empty row for spacing
+    
+    // Summary Section
+    ['Summary Metrics'],
+    ['Metric', 'Value'],
+    ['Total Visitors', metrics.totalVisitors || 'N/A'],
+    ['Page Views', metrics.pageViews || 'N/A'],
+    ['Average Session Duration', metrics.avgDuration || 'N/A'],
+    ['Bounce Rate', metrics.bounceRate || 'N/A'],
+    [''],  // Empty row for spacing
+    
+    // Daily Data Section
+    ['Daily Visits'],
+    ['Date', 'Total Visits'],
+    ...dailyData.map(day => [
+      day.date || 'N/A',
+      day.visits || '0'
+    ])
+  ];
+
+  // Convert to CSV string
+  const csvContent = csvRows
+    .map(row => row.map(cell => `"${cell}"`).join(','))
+    .join('\n');
+
+  // Download CSV
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${filename}.csv`;
   link.click();
 }
 

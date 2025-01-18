@@ -10,6 +10,7 @@ import {
   Users 
 } from "lucide-react";
 import { UserMenu } from "@/components/auth/user-menu";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import type { User } from "@/types";
 import { useState } from "react";
 import { siteConfig } from "@/lib/constants";
@@ -57,11 +58,12 @@ export function SideNav({ user, className }: SideNavProps) {
       "flex h-full flex-col border-r bg-background",
       className
     )}>
-      <div className="flex h-14 items-center border-b px-4">
+      <div className="flex h-14 items-center justify-between border-b px-4">
         <Link href="/dashboard" className="flex items-center space-x-2">
           <BarChart2 className="h-6 w-6" />
           <span className="font-bold">{siteConfig.name}</span>
         </Link>
+        <ThemeToggle />
       </div>
       <div className="flex flex-col flex-1">
         <nav className="flex-1 space-y-1 px-2 py-4">
