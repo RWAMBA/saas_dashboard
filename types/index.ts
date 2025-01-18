@@ -1,5 +1,6 @@
 import { DefaultSession } from "next-auth";
 import type { DateRange as DayPickerRange } from "react-day-picker";
+import { Role } from "@/lib/permissions";
 
 declare module "next-auth" {
   interface Session {
@@ -11,6 +12,9 @@ declare module "next-auth" {
     name: string | null;
     email: string | null;
     image: string | null;
+    role: Role;
+    emailVerified?: Date | null;
+    verificationDeadline?: Date | null;
   }
 }
 
@@ -19,6 +23,9 @@ export interface User {
   name: string | null;
   email: string | null;
   image: string | null;
+  role: Role;
+  emailVerified?: Date | null;
+  verificationDeadline?: Date | null;
 }
 
 export interface AuthError {

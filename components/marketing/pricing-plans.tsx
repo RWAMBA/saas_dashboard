@@ -27,6 +27,7 @@ interface PricingTier {
   features: PricingFeature[];
   buttonText: string;
   popular?: boolean;
+  highlightedFeature?: string;
 }
 
 const pricingTiers: PricingTier[] = [
@@ -35,16 +36,19 @@ const pricingTiers: PricingTier[] = [
     description: "Perfect for individual developers and small businesses",
     price: {
       monthly: 149,
-      yearly: 149,
+      yearly: 119,
     },
     features: [
       { text: "Single end product/domain", included: true },
       { text: "6 months support & updates", included: true },
       { text: "Personal or client projects", included: true },
       { text: "Basic email support", included: true },
+      { text: "Export to PDF/CSV", included: true },
+      { text: "Basic analytics", included: true },
       { text: "Multiple domains", included: false },
       { text: "White-label rights", included: false },
     ],
+    highlightedFeature: "Most Popular for Freelancers",
     buttonText: "Get Standard License",
   },
   {

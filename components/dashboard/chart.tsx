@@ -2,15 +2,24 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { format } from "date-fns";
 
-const data = [
-  { name: "Jan", value: 400 },
-  { name: "Feb", value: 300 },
-  { name: "Mar", value: 600 },
-  // Add more data points
-];
+interface ChartData {
+  date: string;
+  totalVisits: number;
+}
 
-export function DashboardChart() {
+interface DashboardChartProps {
+  data: ChartData[];
+}
+
+export function DashboardChart({ data }: DashboardChartProps) {
+  const formattedData = data.map(item => ({
+    ...item,
+    date: format(new Date(item.date), 'MMM d'),
+    totalVisits: Number(item.totalVisits)
+  }));
+
   return (
     <Card>
       <CardHeader>
@@ -19,11 +28,17 @@ export function DashboardChart() {
       <CardContent>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data}>
-              <XAxis dataKey="name" />
+            <LineChart data={formattedData}>
+              <XAxis dataKey="date" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="value" stroke="#8884d8" />
+              <Line 
+                type="monotone" 
+                dataKey="totalVisits" 
+                stroke="hsl(var(--primary))"
+                strokeWidth={2}
+                dot={false}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>

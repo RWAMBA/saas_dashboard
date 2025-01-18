@@ -195,7 +195,12 @@ export function AnalyticsDashboard() {
                     <stat.icon className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{stat.value}</div>
+                    <div 
+                      className="text-2xl font-bold" 
+                      data-metric={stat.title.toLowerCase().replace(/\s+/g, '')}
+                    >
+                      {stat.value}
+                    </div>
                     <div className="flex items-center text-xs text-muted-foreground">
                       <span className={cn(
                         stat.trend === "up" && "text-green-500",

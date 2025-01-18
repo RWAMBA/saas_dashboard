@@ -5,6 +5,8 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { Adapter } from "next-auth/adapters";
+import { Role } from "@/lib/permissions";
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
   session: {
@@ -39,7 +41,6 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
 
-        // This check prevents unverified users from signing in
         if (!user.emailVerified) {
           throw new Error("Please verify your email before signing in");
         }
@@ -53,7 +54,13 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
 
-        return user;
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+          role: user.role as Role || Role.Viewer
+        };
       }
     })
   ],
@@ -61,12 +68,14 @@ export const authOptions: NextAuthOptions = {
     async session({ token, session }) {
       if (session.user) {
         session.user.id = token.sub!;
+        session.user.role = token.role as Role;
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
+        token.role = user.role;
       }
       return token;
     }
