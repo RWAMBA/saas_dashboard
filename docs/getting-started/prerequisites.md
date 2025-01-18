@@ -5,7 +5,7 @@ Before installing Analytics Pro, ensure your system meets the following requirem
 ## System Requirements
 
 ### Required Software
-- Node.js 18 or higher
+- Node.js 20 or higher
 - PostgreSQL 14 or higher
 - npm or yarn package manager
 - Git

@@ -9,7 +9,7 @@
       "use": "@vercel/next",
       "config": {
         "skipBuildCache": true,
-        "nodeVersion": "23.3.0"
+        "nodeVersion": "20.11.0"
       }
     }
   ],
