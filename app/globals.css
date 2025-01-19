@@ -94,6 +94,14 @@ body {
   .container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
+
+  html {
+    @apply overflow-x-hidden;
+  }
+  
+  body {
+    @apply overflow-x-hidden max-w-[100vw];
+  }
 }
 
 @layer base {
@@ -142,4 +150,8 @@ body {
   to {
     opacity: 1;
   }
+}
+
+.container {
+  @apply px-4 md:px-6 mx-auto max-w-7xl;
 }

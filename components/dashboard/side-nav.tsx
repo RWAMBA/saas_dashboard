@@ -41,9 +41,10 @@ const routes = [
 interface SideNavProps {
   user: User;
   className?: string;
+  onNavigate?: () => void;
 }
 
-export function SideNav({ user, className }: SideNavProps) {
+export function SideNav({ user, className, onNavigate }: SideNavProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [isNavigating, setIsNavigating] = useState(false);
@@ -51,6 +52,7 @@ export function SideNav({ user, className }: SideNavProps) {
   const handleNavigation = (href: string) => {
     setIsNavigating(true);
     router.push(href);
+    onNavigate?.();
   };
 
   return (

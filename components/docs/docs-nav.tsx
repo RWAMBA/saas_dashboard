@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 
 const navigationItems = [
   {
@@ -33,8 +37,9 @@ const navigationItems = [
 
 export function DocsNav() {
   const pathname = usePathname();
+  const isMobile = useIsMobile();
 
-  return (
+  const NavContent = () => (
     <nav className="space-y-6 py-6">
       {navigationItems.map((section) => (
         <div key={section.title}>
@@ -59,4 +64,22 @@ export function DocsNav() {
       ))}
     </nav>
   );
+
+  if (isMobile) {
+    return (
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="ghost" size="icon" className="md:hidden fixed left-4 top-4">
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Open docs navigation</span>
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+          <NavContent />
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  return <NavContent />;
 } 
