@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface PricingFeature {
   text: string;
@@ -92,9 +93,9 @@ export function PricingPlans() {
   const [interval, setInterval] = React.useState<"monthly" | "yearly">("monthly");
 
   return (
-    <div className="space-y-8">
-      {/* Pricing Toggle - Centered */}
-      <div className="flex justify-center items-center gap-4">
+    <div className="flex flex-col items-center space-y-8">
+      {/* Billing Toggle */}
+      <div className="flex items-center gap-4">
         <Button
           variant={interval === "monthly" ? "default" : "ghost"}
           onClick={() => setInterval("monthly")}
@@ -106,54 +107,62 @@ export function PricingPlans() {
           onClick={() => setInterval("yearly")}
         >
           Yearly
-          <span className="ml-1.5 text-xs font-normal">Save 20%</span>
+          <span className="ml-1.5 rounded-full bg-primary/20 px-2 py-0.5 text-xs">
+            Save 20%
+          </span>
         </Button>
       </div>
 
-      {/* Pricing Cards - Better Centered with Max Width */}
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="grid gap-8 md:grid-cols-3 md:gap-4 lg:gap-8">
-          {pricingTiers.map((tier) => (
+      {/* Pricing Cards */}
+      <div className="grid gap-8 md:grid-cols-3 lg:gap-8">
+        {pricingTiers.map((tier) => (
+          <div key={tier.name} className="relative">
+            {tier.popular && (
+              <div className="absolute -top-5 left-0 right-0 mx-auto w-fit">
+                <span className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground">
+                  Most Popular
+                </span>
+              </div>
+            )}
             <Card 
-              key={tier.name}
-              className={`relative flex flex-col ${
+              className={cn(
+                "flex flex-col h-full border-2",
                 tier.popular 
-                  ? "border-primary shadow-lg md:scale-105" 
-                  : ""
-              }`}
-            >
-              {tier.popular && (
-                <div className="absolute -top-4 left-0 right-0 flex justify-center">
-                  <span className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full">
-                    Most Popular
-                  </span>
-                </div>
+                  ? "border-primary shadow-lg scale-105 bg-primary/5" 
+                  : "border-border"
               )}
+            >
               <CardHeader>
-                <CardTitle>{tier.name}</CardTitle>
-                <CardDescription>{tier.description}</CardDescription>
+                <CardTitle className="text-xl">{tier.name}</CardTitle>
+                <CardDescription className="mt-2">{tier.description}</CardDescription>
               </CardHeader>
               <CardContent className="flex-1">
-                <div className="mb-6">
-                  <span className="text-4xl font-bold">
+                <div className="mb-8">
+                  <span className="text-5xl font-bold">
                     ${interval === "monthly" ? tier.price.monthly : tier.price.yearly}
                   </span>
-                  <span className="text-muted-foreground ml-2">
+                  <span className="text-muted-foreground ml-2 text-base">
                     /{interval}
                   </span>
                 </div>
-                <ul className="space-y-3 mb-6">
+                <ul className="space-y-4 mb-8">
                   {tier.features.map((feature, index) => (
                     <li 
                       key={index}
-                      className={`flex items-center ${
-                        feature.included ? "text-foreground" : "text-muted-foreground"
-                      }`}
+                      className={cn(
+                        "flex items-center",
+                        feature.included 
+                          ? "text-foreground" 
+                          : "text-muted-foreground/60"
+                      )}
                     >
                       <Check 
-                        className={`h-4 w-4 mr-3 flex-shrink-0 ${
-                          feature.included ? "text-primary" : "text-muted-foreground"
-                        }`}
+                        className={cn(
+                          "h-5 w-5 mr-3 flex-shrink-0",
+                          feature.included 
+                            ? "text-primary" 
+                            : "text-muted-foreground/50"
+                        )}
                       />
                       <span>{feature.text}</span>
                     </li>
@@ -170,8 +179,8 @@ export function PricingPlans() {
                 </Button>
               </CardFooter>
             </Card>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -68,8 +68,8 @@ export function Features() {
     <div className="mx-auto max-w-6xl px-4">
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {features.map((feature, index) => (
-          <Card key={index} className="border-2 hover:border-primary transition-colors">
-            <CardHeader>
+          <Card key={index} className="border-2 hover:border-primary transition-colors h-full">
+            <CardHeader className="flex-1">
               <div className="mb-4 flex items-center justify-center">
                 <div className={`rounded-lg p-3 ring-2 ring-primary/10 ${feature.color}`}>
                   <feature.icon className="h-6 w-6" />

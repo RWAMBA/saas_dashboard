@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, XCircle, CreditCard, Ban } from "lucide-react";
 
 export function CTASection() {
   return (
@@ -59,9 +59,21 @@ export function CTASection() {
             ))}
           </div>
 
-          <div className="pt-8 text-center text-sm text-muted-foreground">
-            <p>No credit card required • 14-day free trial • Cancel anytime</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center space-y-2 p-4 rounded-lg"
+          >
+            <span className="relative mb-2">
+              <CreditCard className="h-8 w-8 text-primary" />
+              <Ban className="h-8 w-8 text-primary absolute top-0 left-0 opacity-50" />
+            </span>
+            <p className="text-sm text-muted-foreground text-center">
+              No credit card required • 14-day free trial • Cancel anytime
+            </p>
+          </motion.div>
         </motion.div>
       </div>
     </section>

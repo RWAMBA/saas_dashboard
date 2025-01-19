@@ -31,15 +31,15 @@ export function Features() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="relative group"
+              className="relative group h-full"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100" />
-              <div className="relative p-6 bg-background rounded-lg border shadow-sm hover:shadow-md transition-shadow">
+              <div className="relative p-6 bg-background rounded-lg border shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   <feature.icon className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <p className="text-muted-foreground flex-grow">{feature.description}</p>
               </div>
             </motion.div>
           ))}
