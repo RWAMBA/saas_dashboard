@@ -8,8 +8,9 @@ import { useAuthToast } from "@/hooks/use-auth-toast";
 import { Loader2 } from "lucide-react";
 
 export default function VerifyEmailPage() {
-  const [verifying, setVerifying] = useState(true);
-  const [verified, setVerified] = useState(false);
+  const [verificationStatus, setVerificationStatus] = useState<
+    'pending' | 'success' | 'error'
+  >('pending');
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -18,24 +19,24 @@ export default function VerifyEmailPage() {
 
   useEffect(() => {
     const verifyEmail = async () => {
+      // If already processed, don't verify again
+      if (verificationStatus !== 'pending') return;
+
       try {
         if (!token) {
+          setVerificationStatus('error');
           throw new Error("Missing verification token");
-        }
-
-        // Add this check to prevent duplicate verification
-        if (verified) {
-          return;
         }
 
         const response = await fetch(`/api/auth/verify?token=${token}`);
         const data = await response.json();
 
         if (!response.ok) {
+          setVerificationStatus('error');
           throw new Error(data.error || "Failed to verify email");
         }
 
-        setVerified(true);
+        setVerificationStatus('success');
         
         if (data.status === "already_verified") {
           authToast.warning(
@@ -49,7 +50,8 @@ export default function VerifyEmailPage() {
           );
         }
         
-        router.push("/login");
+        // Delay redirect slightly to allow toast to be seen
+        setTimeout(() => router.push("/login"), 1500);
       } catch (error) {
         console.error("Verification error:", error);
         const message = error instanceof Error ? error.message : "Verification failed";
@@ -58,12 +60,11 @@ export default function VerifyEmailPage() {
           "Verification failed",
           message
         );
-        setVerifying(false);
       }
     };
 
     verifyEmail();
-  }, [token, router, authToast, verified]);
+  }, [token, router, authToast]); // Removed verified from dependencies
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
@@ -72,12 +73,12 @@ export default function VerifyEmailPage() {
           <CardTitle>Verify your email</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {verifying && !verified ? (
+          {verificationStatus === 'pending' ? (
             <div className="flex flex-col items-center space-y-4">
               <Loader2 className="h-8 w-8 animate-spin" />
               <p>Verifying your email...</p>
             </div>
-          ) : error ? (
+          ) : verificationStatus === 'error' ? (
             <div className="flex flex-col items-center space-y-4">
               <p className="text-red-500">{error}</p>
               <p>Verification failed. Please try again or request a new verification email.</p>
