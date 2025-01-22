@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { SiteHeader } from "@/components/layout/site-header";
+import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({
@@ -26,7 +27,10 @@ export default function RootLayout({
         <Providers>
           <div className="relative flex min-h-screen flex-col">
             <SiteHeader />
-            {children}
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
           </div>
           <Toaster />
         </Providers>

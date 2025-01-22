@@ -1,7 +1,7 @@
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/db/prisma";
 import { registerSchema } from "@/lib/validations/auth";
-import { sendVerificationEmail } from "@/lib/email";
+import { sendVerificationEmail, sendAdminNotification } from "@/lib/email";
 import { randomBytes } from "crypto";
 
 export async function POST(req: Request) {
@@ -40,8 +40,9 @@ export async function POST(req: Request) {
 
     try {
       await sendVerificationEmail(user.email!, verificationToken);
+      await sendAdminNotification(user.email!, user.name);
     } catch (emailError) {
-      console.error("Failed to send verification email:", emailError);
+      console.error("Failed to send emails:", emailError);
       // Continue with registration even if email fails
     }
 
