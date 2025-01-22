@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/db/prisma";
-import { sendVerificationEmail } from "@/lib/email";
+import { prisma } from "../lib/db/prisma";
+import { sendVerificationEmail } from "../lib/email";
 
 async function sendVerificationReminders() {
   try {
@@ -30,4 +30,11 @@ async function sendVerificationReminders() {
 }
 
 // Run the script
-sendVerificationReminders(); 
+sendVerificationReminders()
+  .catch((error) => {
+    console.error('Script failed:', error);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  }); 
