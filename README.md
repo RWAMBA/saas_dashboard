@@ -30,4 +30,4 @@ A modern, full-featured analytics dashboard built with Next.js 15+.
 ## 📦 Installation
 
 1. Clone the repository:
-- git clone
+- git clone https://github.com/JamesSimel/saas_dashboard.git
