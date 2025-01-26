@@ -3,7 +3,7 @@
 A modern, full-featured analytics dashboard built with Next.js 15+.
 
 ## 🚀 Live Demo
-- URL: [Your Vercel URL]
+- URL: https://demo-saas-dashboard.vercel.app/
 - Demo Account: 
   - Email: test@example.com
   - Password: password123
@@ -30,3 +30,4 @@ A modern, full-featured analytics dashboard built with Next.js 15+.
 ## 📦 Installation
 
 1. Clone the repository:
+- git clone
