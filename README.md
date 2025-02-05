@@ -58,7 +58,7 @@ Check out the live demo here: [https://demo-saas-dashboard.vercel.app/](https://
 
 Clone the repository:
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   bashCopyEditgit clone https://github.com/JamesSimel/saas_dashboard.git   `
+clone https://github.com/JamesSimel/saas_dashboard.git   `
 
 Then, follow the installation and setup instructions in the project's documentation.
 
