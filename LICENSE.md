@@ -3,7 +3,7 @@ SaaS Dashboard License Agreement
 IMPORTANT: Please read this License Agreement ("Agreement") carefully before using this product. By using the product, you agree to be bound by the terms set forth herein.
 
 1. License Grant
-1.1 Grant: Subject to the terms and conditions of this Agreement, [Your Company Name] (“Licensor”) hereby grants you (“Licensee”) a non-exclusive, non-transferable license to use the SaaS Dashboard (“Product”) solely for your internal business purposes.
+1.1 Grant: Subject to the terms and conditions of this Agreement, Get 200. (“Licensor”) hereby grants you (“Licensee”) a non-exclusive, non-transferable license to use the SaaS Dashboard (“Product”) solely for your internal business purposes.
 
 1.2 Scope: This license permits the Licensee to install and use the Product on a single device or as otherwise specified in the accompanying documentation.
 
